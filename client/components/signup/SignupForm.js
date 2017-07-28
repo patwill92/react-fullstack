@@ -21,7 +21,7 @@ var SignupForm = createReactClass({
   render(){
     return (
       <form onSubmit={this.onSubmit}>
-        <h1>Join our community!</h1>
+        <h1>Sign Up Page</h1>
         <br/>
         <div className="form-group">
           <label htmlFor="" className="control-label">Email</label>
