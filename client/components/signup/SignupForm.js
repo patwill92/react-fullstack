@@ -1,12 +1,17 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+
+import data from '../../data/data';
 
 var SignupForm = createReactClass({
   getInitialState() {
     return {
       email: '',
       password: '',
-      passwordConfirmation: ''
+      passwordConfirmation: '',
+      data: ''
     };
   },
   onChange(event) {
@@ -16,9 +21,14 @@ var SignupForm = createReactClass({
   },
   onSubmit(event){
     event.preventDefault();
-    console.log(this.state);
+    this.props.userSignupRequest(this.state);
   },
   render(){
+    const options = _.map(data, (val, key) => {
+      return (
+        <option key={val} value={val}>{key}</option>
+      )
+    });
     return (
       <form onSubmit={this.onSubmit}>
         <h1>Sign Up Page</h1>
@@ -51,6 +61,17 @@ var SignupForm = createReactClass({
             className="form-control"/>
         </div>
         <div className="form-group">
+          <label htmlFor="" className="control-label">Test Data</label>
+          <select
+            value={this.state.data}
+            onChange={this.onChange}
+            name="data"
+            className="form-control">
+            <option value="" disabled>Default message</option>
+            { options }
+          </select>
+        </div>
+        <div className="form-group">
           <button className="btn btn-primary btn-md">
             Sign Up
           </button>
@@ -59,5 +80,9 @@ var SignupForm = createReactClass({
     )
   }
 });
+
+SignupForm.propTypes = {
+  userSignupRequest: PropTypes.func.isRequired
+};
 
 export default SignupForm;
