@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import classNames from 'classnames';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 import data from '../../data/data';
 import validateInput from '../../../server/shared/validations/signup';
@@ -53,36 +53,29 @@ var SignupForm = createReactClass({
       <form onSubmit={this.onSubmit}>
         <h1>Sign Up Page</h1>
         <br/>
-        <div className={classNames('form-group', {'has-error': errors.email})}>
-          <label htmlFor="" className="control-label">Email</label>
-          <input
-            value={this.state.email}
-            onChange={this.onChange}
-            type="email"
-            name="email"
-            className="form-control"/>
-          {errors.email && <span className="help-block">{errors.email}</span>}
-        </div>
-        <div className={classNames('form-group', {'has-error': errors.password})}>
-          <label htmlFor="" className="control-label">Password</label>
-          <input
-            value={this.state.password}
-            onChange={this.onChange}
-            type="password"
-            name="password"
-            className="form-control"/>
-          {errors.password && <span className="help-block">{errors.password}</span>}
-        </div>
-        <div className={classNames('form-group', {'has-error': errors.passwordConfirmation})}>
-          <label htmlFor="" className="control-label">Confirm Password</label>
-          <input
-            value={this.state.passwordConfirmation}
-            onChange={this.onChange}
-            type="password"
-            name="passwordConfirmation"
-            className="form-control"/>
-          {errors.passwordConfirmation && <span className="help-block">{errors.passwordConfirmation}</span>}
-        </div>
+        <TextFieldGroup
+          error={errors.email}
+          label="Email"
+          onChange={this.onChange}
+          value={this.state.email}
+          field="Email"
+        />
+        <TextFieldGroup
+          error={errors.password}
+          label="Password"
+          onChange={this.onChange}
+          value={this.state.password}
+          field="Password"
+          type="password"
+        />
+        <TextFieldGroup
+          error={errors.passwordConfirmation}
+          label="Confirm Password"
+          onChange={this.onChange}
+          value={this.state.passwordConfirmation}
+          field="confirm password"
+          type="password"
+        />
         <div className="form-group">
           <label htmlFor="" className="control-label">Test Data</label>
           <select
