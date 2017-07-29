@@ -2,6 +2,8 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { Redirect } from 'react-router-dom';
+
 import TextFieldGroup from '../common/TextFieldGroup';
 
 import data from '../../data/data';
@@ -18,6 +20,7 @@ var SignupForm = createReactClass({
       isLoading: false
     };
   },
+
   onChange(event) {
     this.setState({
       [event.target.name]: event.target.value
@@ -35,11 +38,15 @@ var SignupForm = createReactClass({
     if(this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
       this.props.userSignupRequest(this.state).then(
-        (res) => {
-          console.log(res);
-        }).catch((err) => {
-        this.setState({ errors: err.response.data, isLoading: false})
-      });
+        () => {
+          this.props.addFlashMessage({
+            type: 'success',
+            text: 'Login Successful!'
+          });
+          this.setState({shouldRedirect: true})
+        },
+        (err) => this.setState({ errors: err.response.data, isLoading: false})
+      );
     }
   },
   render(){
@@ -48,7 +55,13 @@ var SignupForm = createReactClass({
       return (
         <option key={val} value={val}>{key}</option>
       )
+
     });
+    if(this.state.shouldRedirect){
+      return (
+        <Redirect to={'/'}/>
+      )
+    }
     return (
       <form onSubmit={this.onSubmit}>
         <h1>Sign Up Page</h1>
@@ -58,14 +71,14 @@ var SignupForm = createReactClass({
           label="Email"
           onChange={this.onChange}
           value={this.state.email}
-          field="Email"
+          field="email"
         />
         <TextFieldGroup
           error={errors.password}
           label="Password"
           onChange={this.onChange}
           value={this.state.password}
-          field="Password"
+          field="password"
           type="password"
         />
         <TextFieldGroup
@@ -73,7 +86,7 @@ var SignupForm = createReactClass({
           label="Confirm Password"
           onChange={this.onChange}
           value={this.state.passwordConfirmation}
-          field="confirm password"
+          field="passwordConfirmation"
           type="password"
         />
         <div className="form-group">
@@ -98,7 +111,10 @@ var SignupForm = createReactClass({
 });
 
 SignupForm.propTypes = {
-  userSignupRequest: PropTypes.func.isRequired
+  userSignupRequest: PropTypes.func.isRequired,
+  addFlashMessage: PropTypes.func.isRequired
 };
 
+
 export default SignupForm;
+
