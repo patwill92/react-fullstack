@@ -2,7 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { Redirect } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 import TextFieldGroup from '../common/TextFieldGroup';
 
@@ -27,45 +27,52 @@ var SignupForm = createReactClass({
     })
   },
   isValid() {
-    const { errors, isValid } = validateInput(this.state);
-    if(!isValid){
-      this.setState({ errors });
+    const {errors, isValid} = validateInput(this.state);
+    if (!isValid) {
+      this.setState({errors});
     }
     return isValid;
   },
-  onSubmit(event){
+  onSubmit(event) {
     event.preventDefault();
-    if(this.isValid()) {
-      this.setState({ errors: {}, isLoading: true });
+    if (this.isValid()) {
+      this.setState({errors: {}, isLoading: true});
       this.props.userSignupRequest(this.state).then(
-        () => {
+        (res) => {
+          console.log(res);
           this.props.addFlashMessage({
             type: 'success',
             text: 'Login Successful!'
           });
-          this.setState({shouldRedirect: true})
+          this.setState({shouldRedirect: true, flash: res.data.msg[0], isLoading: false});
+          console.log(this.state);
         },
-        (err) => this.setState({ errors: err.response.data, isLoading: false})
-      );
+        (err) => this.setState({errors: err.response.data, isLoading: false})
+      )
     }
   },
-  render(){
-    const { errors } = this.state;
+  render() {
+    const {errors} = this.state;
     const options = _.map(data, (val, key) => {
       return (
         <option key={val} value={val}>{key}</option>
       )
 
     });
-    if(this.state.shouldRedirect){
-      return (
-        <Redirect to={'/'}/>
-      )
-    }
+    // if (this.state.shouldRedirect) {
+    //   return (
+    //     <Redirect to={'/'}/>
+    //   )
+    // }
+    var error = this.state.flash &&
+      <div className='alert alert-danger'>
+        <h3>{this.state.flash}</h3>
+      </div>;
     return (
       <form onSubmit={this.onSubmit}>
         <h1>Sign Up Page</h1>
         <br/>
+        {error}
         <TextFieldGroup
           error={errors.email}
           label="Email"
@@ -97,7 +104,7 @@ var SignupForm = createReactClass({
             name="data"
             className="form-control">
             <option value="" disabled>Default message</option>
-            { options }
+            {options}
           </select>
         </div>
         <div className="form-group">
